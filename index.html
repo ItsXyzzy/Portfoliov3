@@ -64,7 +64,7 @@
             font-family: var(--font-code);
             font-size: 11px;
             line-height: 1.2;
-            color: rgba(233,255,118,0.04);
+            color: rgba(233,255,118,0.07);
             overflow: hidden;
             pointer-events: none;
             z-index: 0;
@@ -140,31 +140,133 @@
         /* === HERO === */
         .hero {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 0 40px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 100px 60px 80px;
             position: relative;
             overflow: hidden;
+            gap: 40px;
         }
 
-        .hero-ascii-art {
+        /* scanline overlay */
+        .hero::before {
+            content: '';
             position: absolute;
-            top: 50%;
-            right: 5%;
-            transform: translateY(-55%);
-            font-family: var(--font-code);
-            font-size: 8px;
-            line-height: 1.15;
-            color: rgba(233,255,118,0.12);
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(0,0,0,0.07) 3px,
+                rgba(0,0,0,0.07) 4px
+            );
             pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-mascot {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-mascot-art {
+            font-family: var(--font-code);
+            font-size: clamp(5.5px, 0.72vw, 10.5px);
+            line-height: 1.08;
             white-space: pre;
             user-select: none;
-            animation: drift 20s ease-in-out infinite;
+            letter-spacing: 0.04em;
+            color: var(--accent);
+            text-shadow:
+                0 0 6px rgba(233,255,118,0.7),
+                0 0 18px rgba(233,255,118,0.3),
+                0 0 40px rgba(233,255,118,0.12);
+            animation: foxFloat 6s ease-in-out infinite, foxGlow 3s ease-in-out infinite alternate;
+            display: block;
+            position: relative;
         }
-        @keyframes drift {
-            0%, 100% { transform: translateY(-55%) translateX(0); }
-            50% { transform: translateY(-57%) translateX(-8px); }
+
+        @keyframes foxFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-14px); }
+        }
+        @keyframes foxGlow {
+            from { filter: brightness(1); }
+            to   { filter: brightness(1.2) drop-shadow(0 0 16px rgba(233,255,118,0.55)); }
+        }
+        @keyframes glitch {
+            0%, 93%, 100% { clip-path: none; transform: none; opacity: 0; }
+            94% { clip-path: inset(15% 0 65% 0); transform: translate(-4px, 0); opacity: 1; }
+            95% { clip-path: inset(55% 0 15% 0); transform: translate(4px, 0); opacity: 1; }
+            96% { clip-path: inset(35% 0 45% 0); transform: translate(-2px, 1px); opacity: 0.8; }
+            97% { clip-path: none; transform: none; opacity: 0; }
+        }
+
+        .hero-mascot-glitch {
+            position: absolute;
+            top: 0; left: 0;
+            font-family: var(--font-code);
+            font-size: clamp(5.5px, 0.72vw, 10.5px);
+            line-height: 1.08;
+            white-space: pre;
+            letter-spacing: 0.04em;
+            color: #ff6b35;
+            pointer-events: none;
+            user-select: none;
+            animation: glitch 8s steps(1) infinite;
+            opacity: 0;
+        }
+
+        /* corner bracket decorations */
+        .hero-mascot::before,
+        .hero-mascot::after {
+            content: '';
+            position: absolute;
+            width: 28px; height: 28px;
+            border-color: rgba(233,255,118,0.45);
+            border-style: solid;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .hero-mascot::before {
+            top: -14px; left: -14px;
+            border-width: 2px 0 0 2px;
+        }
+        .hero-mascot::after {
+            bottom: -14px; right: -14px;
+            border-width: 0 2px 2px 0;
+        }
+
+        .hero-mascot-shadow {
+            font-family: var(--font-code);
+            font-size: clamp(5.5px, 0.72vw, 10.5px);
+            line-height: 1.08;
+            white-space: pre;
+            letter-spacing: 0.04em;
+            color: rgba(233,255,118,0.05);
+            display: block;
+            filter: blur(4px);
+            transform: scaleY(-0.22) translateY(-12px);
+            transform-origin: top center;
+            pointer-events: none;
+            user-select: none;
         }
 
         .hero-tag {
@@ -236,7 +338,7 @@
         .hero-scroll-indicator {
             position: absolute;
             bottom: 40px;
-            right: 40px;
+            left: 60px;
             font-family: var(--font-code);
             font-size: 0.6rem;
             color: var(--muted);
@@ -752,7 +854,15 @@
             .mobile-toggle { display: flex; }
             .mobile-overlay { display: flex; }
 
-            .hero { padding: 0 24px 80px; }
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 100px 24px 60px;
+                gap: 50px;
+            }
+            .hero-right { order: -1; }
+            .hero-mascot-art { font-size: 5px; letter-spacing: 0.02em; }
+            .hero-mascot-glitch { font-size: 5px; letter-spacing: 0.02em; }
+            .hero-mascot-shadow { font-size: 5px; letter-spacing: 0.02em; }
             section { padding: 80px 24px; }
 
             .about-section { grid-template-columns: 1fr; gap: 50px; }
@@ -766,7 +876,7 @@
             nav { padding: 20px 24px; }
             footer { flex-direction: column; gap: 20px; text-align: center; }
 
-            .hero-ascii-art { opacity: 0.5; right: -5%; font-size: 6px; }
+
         }
 
         /* === LOADER === */
@@ -785,7 +895,6 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            display: none;
         }
         .loader-content {
             text-align: center;
@@ -866,19 +975,30 @@
 
         <!-- HERO -->
         <header class="hero">
-            <div class="hero-ascii-art" id="heroAscii"></div>
 
-            <div class="hero-tag">Multidisciplinary Developer</div>
-            <h1 class="hero-name">
-                <span class="line-accent">Craig</span>
-                <span class="line-solid">Dowdall.</span>
-            </h1>
-            <div class="hero-sub">
-                <div class="hero-sub-line"></div>
-                <p>Working the future — pixel by pixel</p>
+            <!-- LEFT: text content -->
+            <div class="hero-left">
+                <div class="hero-tag">Multidisciplinary Developer</div>
+                <h1 class="hero-name">
+                    <span class="line-accent">Craig</span>
+                    <span class="line-solid">Dowdall.</span>
+                </h1>
+                <div class="hero-sub">
+                    <div class="hero-sub-line"></div>
+                    <p>Working the future — pixel by pixel</p>
+                </div>
+                <div class="hero-scroll-indicator">SCROLL</div>
             </div>
 
-            <div class="hero-scroll-indicator">SCROLL</div>
+            <!-- RIGHT: fox mascot -->
+            <div class="hero-right">
+                <div class="hero-mascot">
+                    <span class="hero-mascot-art" id="foxArt"></span>
+                    <span class="hero-mascot-glitch" id="foxGlitch" aria-hidden="true"></span>
+                    <span class="hero-mascot-shadow" id="foxShadow" aria-hidden="true"></span>
+                </div>
+            </div>
+
         </header>
 
         <!-- MARQUEE -->
@@ -1148,48 +1268,101 @@
     // === ASCII BACKGROUND ===
     const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ#@%&*+=<>[]{}|\\/:;.,?!~^';
     const canvas = document.getElementById('ascii-canvas');
+    let bgLines = [];
+
     function buildBg() {
         const cols = Math.floor(window.innerWidth / 8.5);
         const rows = Math.floor(window.innerHeight / 13.5);
-        let txt = '';
+        bgLines = [];
         for (let r = 0; r < rows; r++) {
+            let line = '';
             for (let c = 0; c < cols; c++) {
-                txt += Math.random() < 0.15 ? chars[Math.floor(Math.random() * chars.length)] : ' ';
+                line += Math.random() < 0.18 ? chars[Math.floor(Math.random() * chars.length)] : ' ';
             }
-            txt += '\n';
+            bgLines.push(line.split(''));
         }
-        canvas.textContent = txt;
+        canvas.textContent = bgLines.map(l => l.join('')).join('\n');
     }
+
+    function animateBg() {
+        const mutations = 30 + Math.floor(Math.random() * 40);
+        for (let m = 0; m < mutations; m++) {
+            const r = Math.floor(Math.random() * bgLines.length);
+            const c = Math.floor(Math.random() * bgLines[r].length);
+            bgLines[r][c] = Math.random() < 0.22
+                ? chars[Math.floor(Math.random() * chars.length)]
+                : ' ';
+        }
+        canvas.textContent = bgLines.map(l => l.join('')).join('\n');
+        requestAnimationFrame(() => setTimeout(animateBg, 60));
+    }
+
     buildBg();
-    setInterval(() => {
-        const lines = canvas.textContent.split('\n');
-        const idx = Math.floor(Math.random() * lines.length);
-        const lineArr = lines[idx].split('');
-        const cIdx = Math.floor(Math.random() * lineArr.length);
-        lineArr[cIdx] = Math.random() < 0.2 ? chars[Math.floor(Math.random() * chars.length)] : ' ';
-        lines[idx] = lineArr.join('');
-        canvas.textContent = lines.join('\n');
-    }, 80);
+    animateBg();
+    window.addEventListener('resize', buildBg);
 
-    // === HERO ASCII ART ===
-    const heroArt = `
-    ██████╗██████╗ 
-   ██╔════╝██╔══██╗
-   ██║     ██║  ██║
-   ██║     ██║  ██║
-   ╚██████╗██████╔╝
-    ╚═════╝╚═════╝ 
+    // === FOX MASCOT ASCII ART ===
+    const foxArt = `
+          /\                         /\
+         /░░\                       /░░\
+        /░░░░\                     /░░░░\
+       /░░░░░░\___________________/░░░░░░\
+      /░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\
+     /░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░\
+    /░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░\
+   /░░░▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒░░░\
+  /░░░▒▒▒▒░░   ▄▀▀▀▀▀▄      ▄▀▀▀▀▀▄  ░▒▒▒▒░░░\
+  █░░▒▒▒▒░░  ▐█▌╲ ◆ /█▌    ▐█▌╲ ◆ /█▌  ░▒▒▒▒░░█
+  █░░▒▒▒▒░░   ▀▀▀▀▀▀▀▀▀      ▀▀▀▀▀▀▀▀▀  ░▒▒▒▒░░█
+  █░░▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒░░█
+  █░░░▒▒▒▒▒▒░░░  ░░  ▄█████▄  ░░  ░░▒▒▒▒▒▒░░░█
+   ▀█░░░▒▒▒▒▒░░░░░░  ███████  ░░░░░░▒▒▒▒▒░░░█▀
+     ▀▄░░░▒▒▒░░░░░░   ▀████▀   ░░░░░▒▒▒░░░▄▀
+       ▀▄░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▄▀
+         ▐░░░  ▄▄▀▀▄  ░░░░░░  ▄▀▀▄▄  ░░░▌
+         ▐░░░ ▐██████▌░░░░░░▐██████▌ ░░░▌
+         ▐░░░  ▀████▀ ░░░░░░ ▀████▀  ░░░▌
+         ▐░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▌
+          ▀▄░░░░░░░░░░░░░░░░░░░░░░░░▄▀
+            ▀▀▄▄░░░░░░░░░░░░░░▄▄▀▀
+                ▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
-  ┌─────────────────┐
-  │  > developer    │
-  │  > designer     │
-  │  > creator      │
-  │  > builder      │
-  └─────────────────┘
+  ┌──────────────────────────────────────────────┐
+  │  fox.exe  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░]  ready   │
+  └──────────────────────────────────────────────┘`;
 
-  [████████████] 100%
-  LOADING FUTURE...`;
-    document.getElementById('heroAscii').textContent = heroArt;
+    const foxEl = document.getElementById('foxArt');
+    const foxGlitchEl = document.getElementById('foxGlitch');
+    const foxShadowEl = document.getElementById('foxShadow');
+    if (foxEl) {
+        foxEl.textContent = foxArt;
+        foxGlitchEl.textContent = foxArt;
+        foxShadowEl.textContent = foxArt;
+    }
+
+    // Animate a few random chars in the fox art for a 'live' dither feel
+    const foxLines = foxArt.split('\n').map(l => l.split(''));
+    const ditherChars = ['░', '▒'];
+    // Only animate lines 1-22 (face area), skip the terminal box at bottom
+    const faceLineCount = foxLines.length - 4;
+    function animateFox() {
+        for (let i = 0; i < 8; i++) {
+            const r = 1 + Math.floor(Math.random() * (faceLineCount - 1));
+            const row = foxLines[r];
+            if (!row) continue;
+            const c = Math.floor(Math.random() * row.length);
+            const ch = row[c];
+            if (ch === '░') { row[c] = Math.random() < 0.6 ? '▒' : '░'; }
+            else if (ch === '▒') { row[c] = Math.random() < 0.6 ? '░' : '▒'; }
+        }
+        if (foxEl) {
+            const updated = foxLines.map(l => l.join('')).join('\n');
+            foxEl.textContent = updated;
+            foxGlitchEl.textContent = updated;
+        }
+        setTimeout(animateFox, 100);
+    }
+    animateFox();
 
     // === WORK CARD ASCII FILLS ===
     function makeAsciiBlock(el) {
