@@ -187,27 +187,42 @@
             <div id="work" style="position:absolute; top:-80px;"></div>
             <div class="section-label">// 002 — Selected Work</div>
             <div class="work-grid">
-                <div class="work-card">
+                <div class="work-card" data-project="1">
+                    <div class="work-card-media">
+                        <video class="work-card-video" autoplay muted loop playsinline>
+                            <source src="" type="video/mp4">
+                        </video>
+                        <img class="work-card-image" src="" alt="PAM AI Dashboard">
+                    </div>
                     <div class="work-card-ascii" id="ascii1"></div>
                     <div class="work-card-content">
                         <div class="work-card-num">001</div>
-                        <div class="work-card-title">Portfolio v2</div>
+                        <div class="work-card-title">PAM AI Dashboard</div>
                         <div class="work-card-tags">
-                            <span class="work-tag">React</span>
-                            <span class="work-tag">TypeScript</span>
+                            <span class="work-tag">HTML5</span>
+                            <span class="work-tag">JavaScript</span>
                             <span class="work-tag">CSS</span>
+                            <span class="work-tag">Figma</span>
                         </div>
                     </div>
                     <div class="work-card-hover-line"></div>
                 </div>
-                <div class="work-card">
+                <div class="work-card" data-project="2">
+                    <div class="work-card-media">
+                        <video class="work-card-video" autoplay muted loop playsinline>
+                            <source src="" type="video/mp4">
+                        </video>
+                        <img class="work-card-image" src="" alt="PAM AI Website Redesign">
+                    </div>
                     <div class="work-card-ascii" id="ascii2"></div>
                     <div class="work-card-content">
                         <div class="work-card-num">002</div>
-                        <div class="work-card-title">Design System</div>
+                        <div class="work-card-title">PAM AI Website Redesign</div>
                         <div class="work-card-tags">
                             <span class="work-tag">Figma</span>
-                            <span class="work-tag">Storybook</span>
+                            <span class="work-tag">HTML5</span>
+                            <span class="work-tag">CSS3</span>
+                            <span class="work-tag">JavaScript</span>
                         </div>
                     </div>
                     <div class="work-card-hover-line"></div>
@@ -216,7 +231,7 @@
                     <div class="work-card-ascii" id="ascii3"></div>
                     <div class="work-card-content">
                         <div class="work-card-num">003</div>
-                        <div class="work-card-title">Android App</div>
+                        <div class="work-card-title">Android Wallpaper Apps</div>
                         <div class="work-card-tags">
                             <span class="work-tag">Java</span>
                             <span class="work-tag">Android SDK</span>
@@ -228,11 +243,12 @@
                     <div class="work-card-ascii" id="ascii4"></div>
                     <div class="work-card-content">
                         <div class="work-card-num">004</div>
-                        <div class="work-card-title">API Platform</div>
+                        <div class="work-card-title">Pyskip</div>
                         <div class="work-card-tags">
-                            <span class="work-tag">Node.js</span>
-                            <span class="work-tag">Python</span>
-                            <span class="work-tag">REST</span>
+                            <span class="work-tag">Python3</span>
+                            <span class="work-tag">Pygame</span>
+                            <span class="work-tag">tkinter</span>
+                            <span class="work-tag">OOP</span>
                         </div>
                     </div>
                     <div class="work-card-hover-line"></div>
@@ -331,6 +347,45 @@
         <a href="#work" id="mLink2">Work</a>
         <a href="#contact" id="mLink3">Contact</a>
     </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <div class="lightbox-container">
+            <div class="lightbox-header">
+                <div class="lightbox-title-bar">
+                    <div class="lightbox-dots">
+                        <div class="lightbox-dot"></div>
+                        <div class="lightbox-dot"></div>
+                        <div class="lightbox-dot"></div>
+                    </div>
+                    <span class="lightbox-title">project_view.sh</span>
+                </div>
+                <button class="lightbox-close" id="lightboxClose">×</button>
+            </div>
+            <div class="lightbox-body">
+                <div class="lightbox-grid">
+                    <div class="lightbox-media" id="lightboxMedia">
+                        <video class="lightbox-video" id="lightboxVideo" autoplay muted loop playsinline>
+                            <source src="" type="video/mp4">
+                        </video>
+                        <img class="lightbox-image" id="lightboxImage" src="" alt="">
+                        <div class="lightbox-ascii" id="lightboxAscii"></div>
+                    </div>
+                    <div class="lightbox-content">
+                        <div class="lightbox-number" id="lightboxNumber"></div>
+                        <h3 class="lightbox-heading" id="lightboxHeading"></h3>
+                        <p class="lightbox-description" id="lightboxDescription"></p>
+                        <div class="lightbox-tags" id="lightboxTags"></div>
+                        <a href="#" class="lightbox-link" id="lightboxLink" target="_blank">
+                            <span>View Project</span>
+                            <span class="lightbox-link-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

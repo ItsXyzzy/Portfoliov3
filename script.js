@@ -30,17 +30,25 @@
 const cursor = document.getElementById('cursor');
 const trail = document.getElementById('cursorTrail');
 let mx = 0, my = 0;
-document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx - 6 + 'px';
-    cursor.style.top = my - 6 + 'px';
-    trail.style.left = mx - 20 + 'px';
-    trail.style.top = my - 20 + 'px';
-});
-document.querySelectorAll('a, button, .work-card, .term-skill').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2)');
-    el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
-});
+
+// Check if device supports hover (not touch device)
+const isTouchDevice = window.matchMedia('(hover: none)').matches || 
+                       window.matchMedia('(pointer: coarse)').matches;
+
+if (!isTouchDevice) {
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx - 6 + 'px';
+        cursor.style.top = my - 6 + 'px';
+        trail.style.left = mx - 20 + 'px';
+        trail.style.top = my - 20 + 'px';
+    });
+    
+    document.querySelectorAll('a, button, .work-card, .term-skill').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2)');
+        el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+    });
+}
 
 // === ASCII BACKGROUND ===
 const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ#@%&*+=<>[]{}|\\/:;.,?!~^';
@@ -248,3 +256,187 @@ if (contactForm) {
         terminalOutput.appendChild(successLine);
     });
 }
+
+// === LIGHTBOX ===
+const projects = [
+    {
+        id: 1,
+        number: '001',
+        title: 'PAM AI Dashboard',
+        description: 'A dynamic dashboard for a PAM AI project, built with React and TypeScript. Features real-time data visualization with D3.js, interactive filters, and a responsive design. Styled with CSS modules and animated with Framer Motion for smooth transitions.',
+        tags: ['HTML5', 'CSS', 'JavaScript', 'Figma'],
+        link: '#',
+        media: {
+            type: 'video', // or 'image'
+            src: '', // path to video or image - e.g., 'assets/dashboard.mp4'
+            alt: 'PAM AI Dashboard preview'
+        }
+    },
+    {
+        id: 2,
+        number: '002',
+        title: 'PAM AI Website Redesign',
+        description: 'A complete redesign of the PAM AI website, focusing on a sleek, modern glassmorphism aesthetic with improved UX. Built with HTML5, CSS3, and JavaScript, and designed in Figma. The project included creating a component library for consistent UI elements and integrating Storybook for development.',
+        tags: ['Figma', 'HTML5', 'CSS3', 'JavaScript'],
+        link: 'https://itsxyzzy.github.io/CSC1002-DIME-Project/',
+        media: {
+            type: 'image',
+            src: '', // path to image - e.g., 'assets/website-preview.jpg'
+            alt: 'PAM AI Website Redesign preview'
+        }
+    },
+    {
+        id: 3,
+        number: '003',
+        title: 'Android Apps',
+        description: 'Two native Android wallpaper applications built with Java and the Android SDK. Features a clean Material Design interface, local database storage with Firebase. Published on the Google Play Store.',
+        tags: ['Java', 'Android SDK', 'Firebase', 'Material Design'],
+        link: '#',
+        media: null // Uses default ASCII
+    },
+    {
+        id: 4,
+        number: '004',
+        title: 'Pyskip',
+        description: 'A music player built with Python using Pygame for a student project. Features a custom UI, playlist management, and support for common audio formats. The project focused on implementing core music player functionalities and creating an intuitive user experience.',
+        tags: ['Python', 'Pygame', 'tkinter', 'OOP'],
+        link: 'https://github.com/ItsXyzzy/Pyskip',
+        media: null // Uses default ASCII
+    }
+];
+
+// Lightbox elements
+const lightboxOverlay = document.getElementById('lightboxOverlay');
+const lightboxClose = document.getElementById('lightboxClose');
+const lightboxMedia = document.getElementById('lightboxMedia');
+const lightboxVideo = document.getElementById('lightboxVideo');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxAscii = document.getElementById('lightboxAscii');
+const lightboxNumber = document.getElementById('lightboxNumber');
+const lightboxHeading = document.getElementById('lightboxHeading');
+const lightboxDescription = document.getElementById('lightboxDescription');
+const lightboxTags = document.getElementById('lightboxTags');
+const lightboxLink = document.getElementById('lightboxLink');
+
+// Default ASCII art for projects without media
+const defaultAscii = `
+    ╔══════════════════════════╗
+    ║  ███╗   ██╗███████╗██╗  ║
+    ║  ████╗  ██║██╔════╝██║  ║
+    ║  ██╔██╗ ██║█████╗  ██║  ║
+    ║  ██║╚██╗██║██╔══╝  ██║  ║
+    ║  ██║ ╚████║███████╗███████║
+    ║  ╚═╝  ╚═══╝╚══════╝╚══════╝
+    ╚══════════════════════════╝`;
+
+// Open lightbox
+function openLightbox(projectId) {
+    const project = projects.find(p => p.id === projectId);
+    if (!project) return;
+    
+    // Populate lightbox content
+    lightboxNumber.textContent = project.number;
+    lightboxHeading.textContent = project.title;
+    lightboxDescription.textContent = project.description;
+    lightboxLink.href = project.link;
+    
+    // Handle media
+    if (project.media && project.media.src) {
+        lightboxMedia.classList.add('has-media');
+        
+        if (project.media.type === 'video') {
+            lightboxVideo.src = project.media.src;
+            lightboxVideo.style.display = 'block';
+            lightboxImage.style.display = 'none';
+            lightboxImage.src = '';
+        } else {
+            lightboxImage.src = project.media.src;
+            lightboxImage.alt = project.media.alt;
+            lightboxImage.style.display = 'block';
+            lightboxVideo.style.display = 'none';
+            lightboxVideo.src = '';
+        }
+        lightboxAscii.textContent = '';
+    } else {
+        // No media - show ASCII fallback
+        lightboxMedia.classList.remove('has-media');
+        lightboxVideo.style.display = 'none';
+        lightboxImage.style.display = 'none';
+        lightboxVideo.src = '';
+        lightboxImage.src = '';
+        lightboxAscii.textContent = defaultAscii;
+    }
+    
+    // Build tags
+    lightboxTags.innerHTML = project.tags
+        .map(tag => `<span class="lightbox-tag">${tag}</span>`)
+        .join('');
+    
+    // Show lightbox
+    lightboxOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close lightbox
+function closeLightbox() {
+    lightboxOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Event listeners
+if (lightboxClose) {
+    lightboxClose.addEventListener('click', closeLightbox);
+}
+
+if (lightboxOverlay) {
+    lightboxOverlay.addEventListener('click', (e) => {
+        if (e.target === lightboxOverlay) {
+            closeLightbox();
+        }
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightboxOverlay.classList.contains('active')) {
+        closeLightbox();
+    }
+});
+
+// Add click handlers to work cards
+document.querySelectorAll('.work-card').forEach((card, index) => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+        openLightbox(index + 1);
+    });
+});
+
+// === INITIALIZE WORK CARD MEDIA ===
+function initWorkCardMedia() {
+    projects.forEach((project, index) => {
+        const card = document.querySelector(`.work-card[data-project="${project.id}"]`);
+        if (!card) return;
+        
+        const mediaContainer = card.querySelector('.work-card-media');
+        const video = card.querySelector('.work-card-video');
+        const image = card.querySelector('.work-card-image');
+        
+        if (project.media && project.media.src) {
+            mediaContainer.classList.add('has-media');
+            
+            if (project.media.type === 'video') {
+                video.querySelector('source').src = project.media.src;
+                video.load();
+                video.style.display = 'block';
+                image.style.display = 'none';
+            } else {
+                image.src = project.media.src;
+                image.alt = project.media.alt;
+                image.style.display = 'block';
+                video.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Initialize on load
+window.addEventListener('load', initWorkCardMedia);
