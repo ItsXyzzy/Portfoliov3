@@ -268,7 +268,7 @@ const projects = [
         link: '#',
         media: {
             type: 'video', // or 'image'
-            src: '', // path to video or image - e.g., 'assets/dashboard.mp4'
+            src: 'media/pamaidashboard.mp4', // path to video or image - e.g., 'assets/dashboard.mp4'
             alt: 'PAM AI Dashboard preview'
         }
     },
